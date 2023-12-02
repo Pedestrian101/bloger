@@ -43,7 +43,7 @@
       border: 1px solid white;
       padding: 5px;
       margin-bottom: 10px;
-      font-size: 12px; /* Added smaller font size */
+      font-size: 12px;
     }
     .comment-author {
       font-weight: bold;
@@ -155,14 +155,26 @@
         commentContainer.insertBefore(commentElement, existingComments[0]);
       }
 
-      // Save comment to local storage
-      const commentsData = JSON.parse(localStorage.getItem(`comments-${postIndex}`)) || [];
-      const commentData = {
-        author: nameInput.value,
-        content: commentInput.value
-      };
-      commentsData.unshift(commentData);
-      localStorage.setItem(`comments-${postIndex}`, JSON.stringify(commentsData));
+      // Send comment data to server
+      const formData = new FormData();
+      formData.append('postIndex', postIndex);
+      formData.append('name', nameInput.value);
+      formData.append('comment', commentInput.value);
+
+      fetch('comments.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (response.ok) {
+          console.log('Comment submitted to the server.');
+        } else {
+          console.log('Error submitting comment to the server.');
+        }
+      })
+      .catch(error => {
+        console.log('Error sending request to the server:', error);
+      });
 
       // Clear inputs
       nameInput.value = "";
@@ -183,21 +195,26 @@
         quoteElements[i].textContent = getRandomQuote();
       }
 
-      // Retrieve comments from local storage and display them
-      for (let i = 0; i <= 1; i++) {
-        const commentsData = JSON.parse(localStorage.getItem(`comments-${i}`)) || [];
+      // Retrieve comments from the server and display them
+      fetch('get_comments.php')
+        .then(response => response.json())
+        .then(data => {
+          data.forEach(commentData => {
+            const { postIndex, name, comment } = commentData;
 
-        const commentContainer = document.getElementById(`comments-container-${i}`);
-        for (const commentData of commentsData) {
-          const commentElement = document.createElement("div");
-          commentElement.className = "comment";
-          commentElement.innerHTML = `
-            <p class="comment-author">${commentData.author}</p>
-            <p>${commentData.content}</p>
-          `;
-          commentContainer.appendChild(commentElement);
-        }
-      }
+            const commentContainer = document.getElementById(`comments-container-${postIndex}`);
+            const commentElement = document.createElement("div");
+            commentElement.className = "comment";
+            commentElement.innerHTML = `
+              <p class="comment-author">${name}</p>
+              <p>${comment}</p>
+            `;
+            commentContainer.appendChild(commentElement);
+          });
+        })
+        .catch(error => {
+          console.log('Error retrieving comments from the server:', error);
+        });
 
       document.body.style.opacity = 1; // Set opacity to 1 after content loads
     });
