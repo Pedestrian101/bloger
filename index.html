@@ -41,8 +41,9 @@
     }
     .comment {
       border: 1px solid white;
-      padding: 10px;
+      padding: 5px;
       margin-bottom: 10px;
+      font-size: 12px; /* Added smaller font size */
     }
     .comment-author {
       font-weight: bold;
@@ -148,7 +149,12 @@
         <p>${commentInput.value}</p>
       `;
 
-      commentContainer.appendChild(commentElement);
+      const existingComments = commentContainer.querySelectorAll('.comment');
+      if (existingComments.length === 0) {
+        commentContainer.appendChild(commentElement);
+      } else {
+        commentContainer.insertBefore(commentElement, existingComments[0]);
+      }
 
       // Clear inputs
       nameInput.value = "";
