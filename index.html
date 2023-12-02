@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Blog</title>
+  <style>
+    body {
+      background-color: black;
+      font-family: Arial, sans-serif;
+      color: white;
+      opacity: 0;
+      animation: fade-in 1s forwards;
+    }
+    .post {
+      background-color: #111;
+      padding: 20px;
+      margin-bottom: 20px;
+      color: white;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .datetime {
+      font-size: 12px;
+      color: gray;
+    }
+    .quote-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .quote {
+      font-style: italic;
+    }
+    #clock {
+      font-size: 24px;
+      text-align: right;
+    }
+    .comments {
+      margin-top: 20px;
+    }
+    .comment {
+      border: 1px solid white;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .comment-author {
+      font-weight: bold;
+    }
+    .comment-form {
+      margin-top: 20px;
+    }
+    .comment-form input,
+    .comment-form textarea {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+    .comment-form button {
+      background-color: #333;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Blog</h1>
+  </header>
+
+  <div class="quote-container">
+    <h2>Quote of the Day</h2>
+    <p class="quote"></p>
+  </div>
+
+  <main>
+    <div class="post">
+      <h2 class="title">Lorem Ipsum</h2>
+      <p class="datetime">Last Edited: <span class="edit-time"></span></p>
+      <p>This is the content of the blog post.</p>
+      <div class="comments">
+        <h3>Comments</h3>
+        <div class="comment-form">
+          <input type="text" placeholder="Your name" id="name-input">
+          <textarea placeholder="Your comment" id="comment-input"></textarea>
+          <button onclick="addComment(0)">Submit</button>
+        </div>
+        <div id="comments-container-0"></div>
+      </div>
+    </div>
+
+    <div class="post">
+      <h2 class="title">Dolor Sit Amet</h2>
+      <p class="datetime">Last Edited: <span class="edit-time"></span></p>
+      <p>This is another blog post.</p>
+      <div class="comments">
+        <h3>Comments</h3>
+        <div class="comment-form">
+          <input type="text" placeholder="Your name" id="name-input-1">
+          <textarea placeholder="Your comment" id="comment-input-1"></textarea>
+          <button onclick="addComment(1)">Submit</button>
+        </div>
+        <div id="comments-container-1"></div>
+      </div>
+    </div>
+  </main>
+
+  <div id="clock"></div>
+
+  <script>
+    function getRandomQuote() {
+      const quotes = [
+        "The only way to do great work is to love what you do. - Steve Jobs",
+        "Innovation distinguishes between a leader and a follower. - Steve Jobs",
+        "The greatest glory in living lies not in never falling, but in rising every time we fall. - Nelson Mandela",
+        "Your time is limited, don't waste it living someone else's life. - Steve Jobs",
+        "Life is what happens when you're busy making other plans. - John Lennon",
+        "Believe you can and you're halfway there. - Theodore Roosevelt",
+        "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
+        "Success is not final, failure is not fatal: It is the courage to continue that counts. - Winston Churchill",
+        "The journey of a thousand miles begins with one step. - Lao Tzu",
+        "The mind is everything. What you think you become. - Buddha"
+      ];
+
+      const currentDay = new Date().toLocaleDateString();
+      const day = currentDay.split("/")[1]; // Get the day component from the date
+
+      return quotes[day % quotes.length]; // Select quote based on the day
+    }
+
+    function addComment(postIndex) {
+      const nameInput = document.getElementById(`name-input${postIndex}`);
+      const commentInput = document.getElementById(`comment-input${postIndex}`);
+
+      if (nameInput.value === "" || commentInput.value === "") {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const commentContainer = document.getElementById(`comments-container-${postIndex}`);
+
+      const commentElement = document.createElement("div");
+      commentElement.className = "comment";
+      commentElement.innerHTML = `
+        <p class="comment-author">${nameInput.value}</p>
+        <p>${commentInput.value}</p>
+      `;
+
+      commentContainer.appendChild(commentElement);
+
+      // Clear inputs
+      nameInput.value = "";
+      commentInput.value = "";
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      const editTimeElements = document.getElementsByClassName("edit-time");
+      const currentTime = new Date().toLocaleString();
+
+      for (let i = 0; i < editTimeElements.length; i++) {
+        editTimeElements[i].textContent = currentTime;
+      }
+
+      const quoteElements = document.getElementsByClassName("quote");
+
+      for (let i = 0; i < quoteElements.length; i++) {
+        quoteElements[i].textContent = getRandomQuote();
+      }
+
+      document.body.style.opacity = 1; // Set opacity to 1 after content loads
+    });
+  </script>
+</body>
+</html>
