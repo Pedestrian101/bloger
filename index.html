@@ -83,8 +83,8 @@
       <div class="comments">
         <h3>Comments</h3>
         <div class="comment-form">
-          <input type="text" placeholder="Your name" id="name-input">
-          <textarea placeholder="Your comment" id="comment-input"></textarea>
+          <input type="text" placeholder="Your name" id="name-input-0">
+          <textarea placeholder="Your comment" id="comment-input-0"></textarea>
           <button onclick="addComment(0)">Submit</button>
         </div>
         <div id="comments-container-0"></div>
@@ -131,8 +131,8 @@
     }
 
     function addComment(postIndex) {
-      const nameInput = document.getElementById(`name-input${postIndex}`);
-      const commentInput = document.getElementById(`comment-input${postIndex}`);
+      const nameInput = document.getElementById(`name-input-${postIndex}`);
+      const commentInput = document.getElementById(`comment-input-${postIndex}`);
 
       if (nameInput.value === "" || commentInput.value === "") {
         alert("Please fill in all fields.");
