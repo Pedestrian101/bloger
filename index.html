@@ -141,7 +141,6 @@
       }
 
       const commentContainer = document.getElementById(`comments-container-${postIndex}`);
-
       const commentElement = document.createElement("div");
       commentElement.className = "comment";
       commentElement.innerHTML = `
@@ -155,6 +154,15 @@
       } else {
         commentContainer.insertBefore(commentElement, existingComments[0]);
       }
+
+      // Save comment to local storage
+      const commentsData = JSON.parse(localStorage.getItem(`comments-${postIndex}`)) || [];
+      const commentData = {
+        author: nameInput.value,
+        content: commentInput.value
+      };
+      commentsData.unshift(commentData);
+      localStorage.setItem(`comments-${postIndex}`, JSON.stringify(commentsData));
 
       // Clear inputs
       nameInput.value = "";
@@ -173,6 +181,22 @@
 
       for (let i = 0; i < quoteElements.length; i++) {
         quoteElements[i].textContent = getRandomQuote();
+      }
+
+      // Retrieve comments from local storage and display them
+      for (let i = 0; i <= 1; i++) {
+        const commentsData = JSON.parse(localStorage.getItem(`comments-${i}`)) || [];
+
+        const commentContainer = document.getElementById(`comments-container-${i}`);
+        for (const commentData of commentsData) {
+          const commentElement = document.createElement("div");
+          commentElement.className = "comment";
+          commentElement.innerHTML = `
+            <p class="comment-author">${commentData.author}</p>
+            <p>${commentData.content}</p>
+          `;
+          commentContainer.appendChild(commentElement);
+        }
       }
 
       document.body.style.opacity = 1; // Set opacity to 1 after content loads
